@@ -43,16 +43,47 @@ app.post("/login", function(req, res) {
     username = req.body.username;
     password = req.body.password;
 
-    const newuser = new User({
-    username: username,
-    password: password
-  });
-  newuser.save();
+    var strings = password;
+    var i=0;
+    var character='';
+    let numeric = 0;
+    let alphaCap = 0;
+    let alphaSmall = 0;
 
-  res.render("signupResult", {
-      id: "green",
-      message: "Logged in Successfully!"
-  });
+    while (i <= strings.length){
+        character = strings.charAt(i);
+        if (!isNaN(character * 1)){
+            numeric+=1;
+        }else{
+            if (character == character.toUpperCase()) {
+                alphaCap+=1;
+            }
+            if (character == character.toLowerCase()){
+                alphaSmall+=1;
+            }
+        }
+        i++;
+    }
+
+    if (numeric>0 && alphaCap>0 && alphaSmall>0) {
+        const newuser = new User({
+        username: username,
+        password: password
+      });
+      newuser.save();
+
+      res.render("signupResult", {
+          id: "green",
+          message: "Logged in Successfully!"
+      });
+  } else {
+      res.render("signupResult", {
+          id: "green",
+          message: "Password invalid - please create a new password!"
+      });
+  }
+
+
 
 });
 
